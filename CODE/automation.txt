@@ -7,7 +7,7 @@ Esto lo lograremos usando AWS Lambda + S3 Event Triggers.
 ✅ Conectar Lambda a S3 con un Trigger de Evento (cuando se suba un archivo).
 ✅ Probar subiendo un archivo y verificando que el ETL se ejecuta automáticamente.
 
-###🔹 Paso 1: Crear la Función Lambda
+🔹 Paso 1: Crear la Función Lambda
 📌 Accede a la consola de AWS Lambda:
 1️⃣ Ve a AWS Console → Lambda → Create function
 2️⃣ Selecciona Author from Scratch
@@ -16,7 +16,7 @@ Runtime: Python 3.9
 Execution role: Create a new role with basic Lambda permissions
 3️⃣ Haz clic en Create function
 
-###🔹 Paso 2: Asignar Permisos a Lambda
+🔹 Paso 2: Asignar Permisos a Lambda
 📌 Necesitamos darle a Lambda permisos para acceder a S3.
 1️⃣ Ve a IAM → Roles
 2️⃣ Busca la rol de tu Lambda (será algo como etl-process-lambda-role-xxxx)
@@ -25,7 +25,7 @@ Execution role: Create a new role with basic Lambda permissions
 ✅ CloudWatchLogsFullAccess (para ver logs)
 4️⃣ Guarda los cambios
 
-### 🔹 Paso 3: Subir el Código a Lambda
+🔹 Paso 3: Subir el Código a Lambda
 📌 Copiemos nuestro código de ETL en Lambda.
 
 1️⃣ Ve a Lambda → etl-process-lambda
@@ -47,7 +47,7 @@ zip -r etl_lambda.zip .
 2️⃣ Haz clic en Upload from → .zip file
 3️⃣ Sube etl_lambda.zip
 
-###🔹 Paso 4: Configurar el Trigger de S3
+🔹 Paso 4: Configurar el Trigger de S3
 📌 Vamos a hacer que Lambda se ejecute automáticamente cuando subimos un archivo a S3.
 
 1️⃣ Ve a S3 → etl-source-data
@@ -58,7 +58,8 @@ Event type: All object create events
 Destination: Lambda function
 Function: etl-process-lambda
 3️⃣ Guarda los cambios
-###🔹 Paso 5: Prueba la Automatización
+
+🔹 Paso 5: Prueba la Automatización
 📌 Sube un archivo nuevo a etl-source-data
 
 Ejecuta en CloudShell:
