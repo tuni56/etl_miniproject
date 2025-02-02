@@ -1,0 +1,72 @@
+🚀 Automatización del ETL con AWS Lambda y S3 Event Triggers
+Vamos a hacer que nuestro proceso ETL se ejecute automáticamente cada vez que se suba un nuevo archivo al bucket etl-source-data.
+Esto lo lograremos usando AWS Lambda + S3 Event Triggers.
+
+📝 Plan de Acción
+✅ Crear una función Lambda para ejecutar nuestro ETL.
+✅ Conectar Lambda a S3 con un Trigger de Evento (cuando se suba un archivo).
+✅ Probar subiendo un archivo y verificando que el ETL se ejecuta automáticamente.
+
+###🔹 Paso 1: Crear la Función Lambda
+📌 Accede a la consola de AWS Lambda:
+1️⃣ Ve a AWS Console → Lambda → Create function
+2️⃣ Selecciona Author from Scratch
+Function name: etl-process-lambda
+Runtime: Python 3.9
+Execution role: Create a new role with basic Lambda permissions
+3️⃣ Haz clic en Create function
+
+###🔹 Paso 2: Asignar Permisos a Lambda
+📌 Necesitamos darle a Lambda permisos para acceder a S3.
+1️⃣ Ve a IAM → Roles
+2️⃣ Busca la rol de tu Lambda (será algo como etl-process-lambda-role-xxxx)
+3️⃣ Haz clic en Attach policies y agrega:
+✅ AmazonS3FullAccess (para leer y escribir en S3)
+✅ CloudWatchLogsFullAccess (para ver logs)
+4️⃣ Guarda los cambios
+
+### 🔹 Paso 3: Subir el Código a Lambda
+📌 Copiemos nuestro código de ETL en Lambda.
+
+1️⃣ Ve a Lambda → etl-process-lambda
+2️⃣ En la pestaña Code, haz clic en Upload from → .zip file
+3️⃣ Crea un ZIP con el código Python y las dependencias (Boto3, Pandas).
+
+Si estás en CloudShell, ejecuta:
+
+mkdir lambda_etl && cd lambda_etl
+nano lambda_function.py
+
+📌 Crear el ZIP para Lambda
+Ejecuta en CloudShell:
+pip install pandas -t .
+zip -r etl_lambda.zip .
+
+📌 Subir el ZIP a Lambda
+1️⃣ Vuelve a Lambda
+2️⃣ Haz clic en Upload from → .zip file
+3️⃣ Sube etl_lambda.zip
+
+###🔹 Paso 4: Configurar el Trigger de S3
+📌 Vamos a hacer que Lambda se ejecute automáticamente cuando subimos un archivo a S3.
+
+1️⃣ Ve a S3 → etl-source-data
+2️⃣ Haz clic en Properties → Event notifications → Create event notification
+
+Name: trigger-lambda
+Event type: All object create events
+Destination: Lambda function
+Function: etl-process-lambda
+3️⃣ Guarda los cambios
+###🔹 Paso 5: Prueba la Automatización
+📌 Sube un archivo nuevo a etl-source-data
+
+Ejecuta en CloudShell:
+aws s3 cp data.csv s3://etl-source-data/
+
+📌 Revisar los logs en Lambda
+1️⃣ Ve a AWS Lambda → etl-process-lambda
+2️⃣ En Monitor → View logs in CloudWatch
+3️⃣ Si todo está bien, verás los logs de la ejecución y el mensaje ✅ Datos cargados en s3://etl-processed-data/
+
+
